@@ -1,6 +1,9 @@
 package com.example.progamer
 
-import android.net.Uri
+
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -10,6 +13,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,8 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.progamer.ui.theme.ProGamerTheme
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Share
+
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,14 +52,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.progamer.model.Game
 import com.example.progamer.model.GameRepository.games
 import com.example.progamer.ui.theme.Shapes
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable
 fun GamesList(gameList: List<Game>, modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp)) {
@@ -62,8 +73,8 @@ fun GamesList(gameList: List<Game>, modifier: Modifier = Modifier, contentPaddin
             GameCard(
                 game = game,
                 modifier = Modifier.padding(
-                    horizontal = dimensionResource(R.dimen.padding_medium),
-                    vertical = dimensionResource(R.dimen.padding_small)
+                    horizontal = dimensionResource(R.dimen.padding_xxsmall),
+                    vertical = dimensionResource(R.dimen.padding_xxsmall)
                 ))
 
         }
@@ -75,6 +86,13 @@ fun GameCard(
     game: Game,
     modifier: Modifier
 ){
+    var shared by remember {
+        mutableStateOf(false)
+    }
+
+    var liked by remember {
+        mutableStateOf(true)
+    }
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -120,16 +138,19 @@ fun GameCard(
                 }
                 Spacer(modifier = modifier.width(5.dp))
 
-                Column {
+
                     Text(
+                        modifier = Modifier.width(200.dp)
+                        ,
                         text = stringResource(game.nameRes),
-                        style = MaterialTheme.typography.displayLarge
+                        style = MaterialTheme.typography.displayLarge,
 
                     )
 
-                    GameItemButtom(expanded = expanded, onClick = { expanded = !expanded })
 
-                }
+                Spacer(modifier = Modifier.weight(1f))
+                GameItemButtom(expanded = expanded, onClick = { expanded = !expanded })
+
             }
             if (expanded){
                GameDescription(
@@ -144,8 +165,16 @@ fun GameCard(
                )
                 //VideoPlayer(videoUri = Uri.parse(stringResource(game.videoUrlRes)))
                 youtubePlayer(youtubeVideoId = stringResource(game.videoUrlRes), lifecycleOwner = LocalLifecycleOwner.current)
-            }
 
+                Row {
+                    GameLikeButtom(like = liked, onClick = { liked = !liked })
+                    GameShareButton(
+                        youtubeVideoUrl = stringResource(game.videoUrlRes),
+                        context = LocalContext.current
+                    )
+                }
+
+            }
 
         }
 
@@ -160,20 +189,69 @@ private fun GameItemButtom(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
+
+        IconButton(
+            onClick = onClick,
+            modifier = modifier
+        ) {
+            Icon(
+                imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                contentDescription = stringResource(R.string.expand_button_content_description),
+                tint = MaterialTheme.colorScheme.secondary,
+
+            )
+
+        }
+
+}
+
+@Composable
+private fun GameLikeButtom(
+    like: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+){
     IconButton(
         onClick = onClick,
         modifier = modifier
-
     ) {
         Icon(
-            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-            contentDescription = stringResource(R.string.expand_button_content_description),
+            imageVector = if(like) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
+            contentDescription = null,
             tint = MaterialTheme.colorScheme.secondary
         )
-
     }
 }
 
+@Composable
+fun GameShareButton(
+    youtubeVideoUrl: String,
+    modifier: Modifier = Modifier,
+    context: Context
+    ){
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        putExtra(Intent.EXTRA_TEXT, youtubeVideoUrl)
+        type = "text/plain"
+
+    }
+    IconButton(
+        onClick = {
+            startActivity(context, shareIntent, null)
+            Toast.makeText(context, "Copiado al portapapeles", Toast.LENGTH_SHORT).show()
+                  },
+        modifier = modifier
+        ) {
+        Icon(
+            imageVector = Icons.Filled.Share,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.secondary
+        )
+
+
+    }
+
+}
 
 @Composable
 fun GameDescription(
@@ -190,7 +268,7 @@ fun GameDescription(
         )
         Text(
             text = stringResource(gameDescription),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.displaySmall
         )
 
     }
@@ -201,6 +279,7 @@ fun GameDescription(
 @Composable
 fun ProGamerPreview(){
     ProGamerTheme {
+        /*
         GameCard(
             game = Game(
                 R.drawable.mario_odyssey,
@@ -209,5 +288,8 @@ fun ProGamerPreview(){
                 R.string.Video1
             ),
             modifier = Modifier)
+            */
+
+        GamesList(gameList = games)
     }
 }

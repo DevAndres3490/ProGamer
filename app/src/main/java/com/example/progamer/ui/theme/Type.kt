@@ -26,16 +26,17 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
+    //para el titulo de cada juego
     displayLarge = TextStyle(
         fontFamily = Dosis,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
 
     ),
     displayMedium = TextStyle(
         fontFamily = Dosis,
-        fontWeight = FontWeight.Bold,
-        fontSize = 15.sp
+        fontWeight = FontWeight.Normal,
+        fontSize = 25.sp
     ),
     displaySmall = TextStyle(
         fontFamily = Dosis,
