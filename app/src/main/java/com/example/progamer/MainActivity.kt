@@ -49,7 +49,7 @@ fun ProGamerApp() {
             TopAppBar()
         }
     ) {
-        val game = GameRepository.games
+        val game = GameRepository.games()
         GamesList(gameList = game, contentPadding = it)
 
     }

@@ -7,8 +7,10 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 
 import androidx.compose.foundation.layout.size
@@ -69,7 +72,7 @@ fun GamesList(gameList: List<Game>, modifier: Modifier = Modifier, contentPaddin
         contentPadding = contentPadding,
         modifier = modifier
         ) {
-        itemsIndexed(games) { index, game ->
+        itemsIndexed(games()) { index, game ->
             GameCard(
                 game = game,
                 modifier = Modifier.padding(
@@ -86,19 +89,19 @@ fun GameCard(
     game: Game,
     modifier: Modifier
 ){
-    var shared by remember {
-        mutableStateOf(false)
-    }
 
+    val context = LocalContext.current
     var liked by remember {
         mutableStateOf(true)
     }
     var expanded by remember {
         mutableStateOf(false)
     }
-    val color by animateColorAsState(targetValue = if (expanded) MaterialTheme.colorScheme.tertiaryContainer
+    val color by animateColorAsState(
+        targetValue = if (expanded) MaterialTheme.colorScheme.tertiaryContainer
     else MaterialTheme.colorScheme.primaryContainer)
 
+    var likesCount by remember { mutableStateOf(0) }
     Card (
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.padding_xxsmall)),
         modifier = modifier
@@ -108,8 +111,8 @@ fun GameCard(
             modifier = modifier
                 .animateContentSize(
                     animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioHighBouncy,
-                        stiffness = Spring.StiffnessVeryLow
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMedium
                     )
                 )
                 .background(color = color)
@@ -136,16 +139,15 @@ fun GameCard(
                         contentScale = ContentScale.Crop
                     )
                 }
-                Spacer(modifier = modifier.width(5.dp))
+                Spacer(modifier = modifier.width(dimensionResource(R.dimen.space)))
 
 
                     Text(
-                        modifier = Modifier.width(200.dp)
-                        ,
+                        modifier = Modifier.width(dimensionResource(R.dimen.titleSize)),
                         text = stringResource(game.nameRes),
                         style = MaterialTheme.typography.displayLarge,
 
-                    )
+                        )
 
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -167,7 +169,19 @@ fun GameCard(
                 youtubePlayer(youtubeVideoId = stringResource(game.videoUrlRes), lifecycleOwner = LocalLifecycleOwner.current)
 
                 Row {
-                    GameLikeButtom(like = liked, onClick = { liked = !liked })
+                    GameLikeButtom(
+                        like = liked,
+                        onClick = {
+                            likesCount++
+                            Toast.makeText(context, "Likes: $likesCount", Toast.LENGTH_SHORT).show()
+                                  }
+                    )
+
+                    Text(
+                        text = "Likes: $likesCount",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = modifier.padding(top = 20.dp)
+                    )
                     GameShareButton(
                         youtubeVideoUrl = stringResource(game.videoUrlRes),
                         context = LocalContext.current
@@ -209,11 +223,15 @@ private fun GameItemButtom(
 private fun GameLikeButtom(
     like: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    //context: Context
 ){
     IconButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier.animateContentSize(
+            animationSpec =  spring(dampingRatio = Spring.DampingRatioHighBouncy, stiffness = Spring.StiffnessVeryLow)
+        ),
+
     ) {
         Icon(
             imageVector = if(like) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
@@ -279,7 +297,7 @@ fun GameDescription(
 @Composable
 fun ProGamerPreview(){
     ProGamerTheme {
-        /*
+
         GameCard(
             game = Game(
                 R.drawable.mario_odyssey,
@@ -288,8 +306,8 @@ fun ProGamerPreview(){
                 R.string.Video1
             ),
             modifier = Modifier)
-            */
 
-        GamesList(gameList = games)
+
+        //GamesList(gameList = games())
     }
 }
