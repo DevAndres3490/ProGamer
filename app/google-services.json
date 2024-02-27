@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "569071070295",
+    "project_id": "progamerapp-4dff1",
+    "storage_bucket": "progamerapp-4dff1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569071070295:android:b681e458063a18141c8712",
+        "android_client_info": {
+          "package_name": "com.example.progamer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKOyr-gfTQ0u-zhW1g6kU90Q-zuPK4f60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,30 +4,21 @@ package com.example.progamer
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,20 +50,25 @@ import androidx.compose.ui.platform.LocalContext
 
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import coil.compose.AsyncImage
+
 import com.example.progamer.model.Game
-import com.example.progamer.model.GameRepository.games
 import com.example.progamer.ui.theme.Shapes
 
+/*
 @Composable
-fun GamesList(gameList: List<Game>, modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp)) {
+fun GamesList(modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp)) {
+    var listaGames by remember {
+        mutableStateOf(listOf<Game>())
+    }
     LazyColumn(
         contentPadding = contentPadding,
         modifier = modifier
         ) {
-        itemsIndexed(games()) { index, game ->
+        Datasource().getGames { listaGames = it }
+        itemsIndexed(listaGames) { index, game ->
             GameCard(
                 game = game,
                 modifier = Modifier.padding(
@@ -83,6 +79,8 @@ fun GamesList(gameList: List<Game>, modifier: Modifier = Modifier, contentPaddin
         }
     }
 }
+*/
+
 
 @Composable
 fun GameCard(
@@ -99,7 +97,8 @@ fun GameCard(
     }
     val color by animateColorAsState(
         targetValue = if (expanded) MaterialTheme.colorScheme.tertiaryContainer
-    else MaterialTheme.colorScheme.primaryContainer)
+    else MaterialTheme.colorScheme.primaryContainer, label = ""
+    )
 
     var likesCount by remember { mutableStateOf(0) }
     Card (
@@ -126,47 +125,45 @@ fun GameCard(
                     .sizeIn(minHeight = 72.dp)
             ) {
                 Box(
-                    modifier = Modifier
-                        .clip(Shapes.small)
-                        .size(
-                            dimensionResource(R.dimen.image_size)
-                        )
+
                 ) {
-                    Image(
-                        painter = painterResource(game.imageRes),
+                    AsyncImage(
+                        model = game.imageRes,
                         contentDescription = null,
                         alignment = Alignment.TopCenter,
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .clip(Shapes.small)
+                            .size(
+                                dimensionResource(R.dimen.image_size)
+                            )
                     )
                 }
                 Spacer(modifier = modifier.width(dimensionResource(R.dimen.space)))
 
-
                     Text(
                         modifier = Modifier.width(dimensionResource(R.dimen.titleSize)),
-                        text = stringResource(game.nameRes),
+                        text = game.nameRes,
                         style = MaterialTheme.typography.displayLarge,
 
                         )
-
 
                 Spacer(modifier = Modifier.weight(1f))
                 GameItemButtom(expanded = expanded, onClick = { expanded = !expanded })
 
             }
             if (expanded){
-               GameDescription(
-                    game.descriptionRes,
-                    modifier = Modifier.padding(
-                        start = dimensionResource(R.dimen.padding_medium),
-                        top = dimensionResource(R.dimen.padding_small),
-                        end = dimensionResource(R.dimen.padding_medium),
-                        bottom = dimensionResource(R.dimen.padding_medium),
+               GameDescription(gameDescription = game.descriptionRes,
+                   modifier = Modifier.padding(
+                       start = dimensionResource(R.dimen.padding_medium),
+                       top = dimensionResource(R.dimen.padding_small),
+                       end = dimensionResource(R.dimen.padding_medium),
+                       bottom = dimensionResource(R.dimen.padding_medium),
 
-                    )
+                       )
                )
                 //VideoPlayer(videoUri = Uri.parse(stringResource(game.videoUrlRes)))
-                youtubePlayer(youtubeVideoId = stringResource(game.videoUrlRes), lifecycleOwner = LocalLifecycleOwner.current)
+                youtubePlayer(youtubeVideoId = game.videoUrlRes, lifecycleOwner = LocalLifecycleOwner.current)
 
                 Row {
                     GameLikeButtom(
@@ -183,7 +180,7 @@ fun GameCard(
                         modifier = modifier.padding(top = 20.dp)
                     )
                     GameShareButton(
-                        youtubeVideoUrl = stringResource(game.videoUrlRes),
+                        youtubeVideoUrl = game.videoUrlRes,
                         context = LocalContext.current
                     )
                 }
@@ -273,7 +270,8 @@ fun GameShareButton(
 
 @Composable
 fun GameDescription(
-    @StringRes gameDescription: Int,
+    //game: Game,
+    gameDescription: String,
     modifier: Modifier = Modifier
 
 ){
@@ -285,7 +283,7 @@ fun GameDescription(
             style = MaterialTheme.typography.displaySmall
         )
         Text(
-            text = stringResource(gameDescription),
+            text = gameDescription,
             style = MaterialTheme.typography.displaySmall
         )
 
@@ -298,7 +296,9 @@ fun GameDescription(
 fun ProGamerPreview(){
     ProGamerTheme {
 
+        /*
         GameCard(
+
             game = Game(
                 R.drawable.mario_odyssey,
                 R.string.game1,
@@ -307,7 +307,9 @@ fun ProGamerPreview(){
             ),
             modifier = Modifier)
 
+         */
 
-        //GamesList(gameList = games())
+
+        //GamesList()
     }
 }
