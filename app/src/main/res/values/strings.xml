@@ -1,51 +1,5 @@
 <resources>
     <string name="app_name">ProGamer</string>
-    <string name="game1">Super Mario Odyssey</string>
-    <string name="description1">Un juego en el que  podrás disfrutar de un mundo abierto y tomar la forma de diferentes objetos con el sombrero de Mario.
-</string>
-    <string name="Video1">5kcdRBHM7kM</string>
-
-    <string name="game2">Resident evil 4</string>
-    <string name="description2">Entra en la piel de Lion Kennedy y rescata a la hija del presidente, que se encuentra en un pueblo rodeado de zombies.
-</string>
-    <string name="Video2">O75Ip4o1bs8</string>
-
-    <string name="game3">Guardianes de la galaxia</string>
-    <string name="description3"> Disfruta de una banda sonora excelente y viaja por la galaxia, rescatando a personajes con el cerebro lavado por un lunático.
-</string>
-    <string name="Video3">FxV1KE9BiOs</string>
-
-    <string name="game4">Forza Horizon 5</string>
-    <string name="description4">Un mundo abierto de coches, viaja por los mejores lugares de México y participa en carreras que pondrán a prueba tus habilidades de conducción</string>
-    <string name="Video4">FYH9n37B7Yw</string>
-
-    <string name="game5">Luigi´s mansion 3</string>
-    <string name="description5"> Luigi se convierte en un héroe y pone a prueba su valentía para rescatar a sus amigos en un hotel embrujado.
-</string>
-    <string name="Video5">T9s0hLDUCu8</string>
-
-    <string name="game6">The legend of zelda: breath of the wild</string>
-    <string name="description6">Uno de los mundos abiertos más grandes y una historia de ensueño, nuestro héroe Link rescata al pueblo de hyrule de las manos de ganondorf.</string>
-    <string name="Video6">ofH5ptn5w-A</string>
-
-    <string name="game7">Super smash bros ultimate</string>
-    <string name="description7">Mario, Pikachu, DonkeyKong, Pit, Kirby entre otros personajes, luchan en un combate mortal.
-</string>
-    <string name="Video7">WShCN-AYHqA</string>
-
-    <string name="game8">Mario kart 8 deluxe</string>
-    <string name="description8">Los más icónicos personajes de Nintendo compiten entre sí en karts por las mejores pistas de los mundos de Nintendo.</string>
-    <string name="Video8">tKlRN2YpxRE</string>
-
-    <string name="game9">Star wars: Jedi the fallen order</string>
-    <string name="description9">Narra la historia de un jedi superviviente, después de la ejecución de la orden 66.
-</string>
-    <string name="Video9">0GLbwkfhYZk</string>
-    <string name="game10">Super Mario Wonder</string>
-    <string name="description10">Disfruta de una experiencia única con la flor maravilla, y salva el reino del príncipe Florian que ha caído en las manos del malvado de Bowser.
-</string>
-    <string name="Video10">GZO7MgHNqI4</string>
-
     <string name="review">Review:</string>
     <string name="expand_button_content_description">See more or less information about a game.</string>
 </resources>

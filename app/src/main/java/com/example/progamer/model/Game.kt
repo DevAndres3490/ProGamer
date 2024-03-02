@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 data class Game(
+
     //@DrawableRes
     val imageRes: String,
     //@StringRes
@@ -11,6 +12,7 @@ data class Game(
     //@StringRes
     val descriptionRes: String,
     //@StringRes
-    val videoUrlRes: String
+    val videoUrlRes: String,
+
 )
 
